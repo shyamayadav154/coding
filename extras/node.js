@@ -2,36 +2,56 @@
 
 function order(cityNodes,cityFrom,cityTo,company){
 
-    let obj =new Map()
-    let newArr = new Map()
+   let obj = {}
 
-//    for(let i=0;i<cityNodes;i++){
+   for(let i=0;i<cityNodes;i++){
 
-//       if(company === cityFrom[i]){
-//          obj.set(company,{...obj})
-//       }
-//    }
-// console.log(obj);
-
-//    return
-    let ta =[]
-   
-    for (let i = 0; i < cityNodes; i++) {
-        
-        if(cityFrom[i]=== company){
-            ta[company]= cityTo.slice(0,i+1)
+    if(!obj[cityFrom[i]]){
+        obj[cityFrom[i]] = [cityTo[i]]
+        obj[cityTo[i]] = [cityFrom[i]]
+    } else{
+        obj[cityFrom[i]].push(cityTo[i])
+        if(!obj[cityTo[i]]){
+            obj[cityTo[i]] = [cityFrom[i]]
         }else{
-            ta.push(cityTo[i])
+            obj[cityTo[i]].push(cityFrom[i])
         }
+        
+    }
+   }
+   console.log(obj)
+//'5,[1,1,1,2,3],[2,5,3,4,5],2'
+   function bfs(start){
+       console.log('in bfs');
+    const q=[start]
+    const visited={}
+    const result =[]
+    let currentVertex;
+    visited[start] = true
+
+    while(q.length){
+            currentVertex=q.shift()
+            result.push(currentVertex)
+
+            obj[currentVertex].sort().forEach(neighbor=>{
+                if(!visited[neighbor]){
+                    visited[neighbor] = true
+                    q.push(neighbor)
+                }
+            })
+           
     }
 
-  ta[company].sort()
-  let f =  [...new Set(ta.flat())]
+  
+    console.log(result);
 
-    console.log(f);
+   }
+   bfs(company)
 
-}
+ }
 
 
+let t1 = '5,[1,1,1,2,3],[2,3,5,4,5],3'
+let t2 = '2,[2,1],[1,2],2'
 
-order(5,[1,2,2,2,3],[3,5,3,4,5],2)
+order(5,[1,1,1,2,3],[2,5,3,4,5],3)
